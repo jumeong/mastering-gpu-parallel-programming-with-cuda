@@ -18,3 +18,30 @@
 # 4. How to know the Architecture and Generation
 
 # 5. The difference between the GPU and the GPU Chip
+- 쉽게 말해, GPU 보드와 그 안의 칩의 차이에 대해 설명
+
+# 6. The architectures and the corresponding chips
+- GA100, GA102 등의 Chip이 탑재되는 그래픽카드 예시
+- 동일 칩에서도 오버클럭을 한다던지 해서 스펙이 다르게 제공되는 경우도 있음
+
+# 7. Nvidia GPU architectures From Fermi to hopper
+## Fermi, 2010
+- GPU Chip Example: GF100
+- GPU HPC Example: Tesla X2070
+- GPU N-HPC Example: RTX 480
+- Double Precision에서 Tesla X2070이 GTX 480보다 약 4배의 성능으로 과학 시뮬레이션에 적합
+- Pixel Rate, Texture Rate 등 Single Precision 성능을 요하는 부분에서는 RTX 480이 우세하므로 용도에 맞게 설계된 것을 알 수 있음
+
+## Kepler, 2012
+- GPU Chip Example: GK210
+- GPU HPC Example: K80
+- 하나의 보드에 두 개의 GK210 칩이 탑재된 것을 강조 Why?
+  - 1) 2012년 당시 상황
+    - 미세공정의 한계: 28nm 공정에서 단일 칩 크기를 계속 키우기에는 수율과 발열 문제가 있음
+    - 이에, 단일 칩 성능 한계를 해결하고자 한 기판에 두 개의 풀스펙 칩을 넣음
+    2) HPC 전용 설계
+    - GTX 780 등에 탑재된 GK110에서 레지스터 파일을 두 배로 하여 데이터센터용 고성능 연산을 위해 GK210을 별도로 설계
+    3) 요즘의 패러다임과 비교
+    - 요즘은 공정 한계에 의한 수율과 발열 문제를 해결하기 위해 대부분 칩렛 형태를 채택함 (e.g., AMD, Rebellions REBEL-Quad)
+    - 단일 칩 성능의 한계를 뛰어넘어 시스템 전체의 성능을 높이기 위한 노력의 역사(?)로 보임
+    
