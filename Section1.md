@@ -24,6 +24,8 @@
 - GA100, GA102 등의 Chip이 탑재되는 그래픽카드 예시
 - 동일 칩에서도 오버클럭을 한다던지 해서 스펙이 다르게 제공되는 경우도 있음
 
+------------------------------------------------------------------------------------------------------------------------------
+
 # 7. Nvidia GPU architectures From Fermi to hopper
 ## Fermi, 2010
 - GPU Chip Example: GF100
@@ -45,3 +47,25 @@
     - 요즘은 공정 한계에 의한 수율과 발열 문제를 해결하기 위해 대부분 칩렛 형태를 채택함 (e.g., AMD, Rebellions REBEL-Quad)
     - 단일 칩 성능의 한계를 뛰어넘어 시스템 전체의 성능을 높이기 위한 노력의 역사(?)로 보임
     
+## Maxwell, 2014
+- GPU Chip Example: GM200
+- GPU HPC Example: M60
+- GPU N-HPC Example: RTX 980 Ti
+- 데이터센터에서의 Energy 효율을 위한 클럭 스피드 조절
+
+## Volta, 2017
+- Matrix 연산을 위한 Tensor Core가 처음으로 탑재
+
+## Ampere, 2020
+- MIG (Multi-Instance GPU) 지원
+- BF16 Support
+- TF32 (10-bit mantissa FP32) Support
+- Structured Sparsity (2:4) 지원
+
+## Hopper, 2022
+- FP8 Support
+- Transformer Engine 도입 (더 자세한 공부 필요)
+
+# 8. Parameters required to compare between different Architecures
+
+# 9. Half, single and double precision operations
