@@ -83,3 +83,4 @@
   - single precision (fp32)
   - double precision (fp64)
     - scientific computing
+  - <img width="660" height="421" alt="image" src="https://github.com/user-attachments/assets/4e8e2fe1-077b-4b02-817f-669dbb16ae3c" />
