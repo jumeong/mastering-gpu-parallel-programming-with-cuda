@@ -77,3 +77,9 @@
   - 예를 들어, Volta의 Tensor core
 
 # 9. Half, single and double precision operations
+- integer
+- floating point
+  - half precision (fp16)
+  - single precision (fp32)
+  - double precision (fp64)
+    - scientific computing
