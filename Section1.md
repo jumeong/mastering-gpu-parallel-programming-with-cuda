@@ -67,5 +67,13 @@
 - Transformer Engine 도입 (더 자세한 공부 필요)
 
 # 8. Parameters required to compare between different Architecures
+- Memory bandwidth (memory speed + bus width)
+  - A100의 bus width는 5120bit, memory type은 HBM2
+  - RTX 3090의 bus width는 384bit, memory type은 GDDR6X
+- The throughput TFLOPS (The core count + Speed)
+  - Memory bandwidth와 비슷하게 Core 수와 Core의 Clock speed 모두 중요함
+  - 전성비도 중요
+- New features (supporting new data types - The tensor cores)
+  - 예를 들어, Volta의 Tensor core
 
 # 9. Half, single and double precision operations
