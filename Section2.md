@@ -1,4 +1,5 @@
 # 13. What features installed with the CUDA toolkit?
+- Compute Unified Device Architecture (CUDA)
 - CUDA Compiler (nvcc)
   - Transforming CUDA code into HW code
   - Convert CUDA codes into PTX codes
@@ -19,7 +20,8 @@
   - CUDA-MEMCHECK
 
 # 14. Installing CUDA on Windows
-- Compute Unified Device Architecture (CUDA)
 
 # 15. Intstalling WSL to use Linux on windows OS
+
 # 16. Installing Cuda toolkits on Linux
+- apt install nvidia-cuda-toolkit
