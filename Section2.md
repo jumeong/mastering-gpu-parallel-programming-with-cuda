@@ -17,3 +17,9 @@
   - NVIDIA Nsight Compute
   - CUDA-GDB
   - CUDA-MEMCHECK
+
+# 14. Installing CUDA on Windows
+- Compute Unified Device Architecture (CUDA)
+
+# 15. Intstalling WSL to use Linux on windows OS
+# 16. Installing Cuda toolkits on Linux
