@@ -1,0 +1,19 @@
+# 13. What features installed with the CUDA toolkit?
+- CUDA Compiler (nvcc)
+  - Transforming CUDA code into HW code
+  - Convert CUDA codes into PTX codes
+  - Obtain Executable file
+- CUDA Libraries
+  - cuBLAS
+  - cuFFT
+  - cuRAND
+  - cuDNN
+- Runtime and Driver APIs
+  - These provied a low-level and high-level interface for managing devices, memory, and programming execution on GPUs.
+  - cudaMalloc()
+  - cudaMemcpy()
+- Debugging and Performance Analysis
+  - NVIDIA Nsight Systems
+  - NVIDIA Nsight Compute
+  - CUDA-GDB
+  - CUDA-MEMCHECK
