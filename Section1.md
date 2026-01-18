@@ -84,3 +84,17 @@
   - double precision (fp64)
     - scientific computing
   - <img width="660" height="421" alt="image" src="https://github.com/user-attachments/assets/4e8e2fe1-077b-4b02-817f-669dbb16ae3c" />
+
+# 10. Compute capability and utilizations of the GPUs
+- Compute capability
+  - 예를 들어, Volta는 7.0으로 표기되고 Ampere는 8.0으로 표기됨
+  - https://docs.nvidia.com/cuda/cuda-c-programming-guide/#features-and-technical-specifications
+- Software capability
+  - 예를 들어, Hopper는 연산 능력이 9.x 대에 해당하며, CUDA 11.8 이상의 버전이 필요함
+
+# 11. Before reading any whitepapers
+- New features
+- SM 구조 변화 (e.g., Volta vs Ampere)
+- Performance
+- Technical specifications
+  - Cores, Memory, Power
