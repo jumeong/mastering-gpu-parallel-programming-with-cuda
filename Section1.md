@@ -133,4 +133,5 @@
     - Computational units
 
 <img width="675" height="942" alt="image" src="https://github.com/user-attachments/assets/fc0e191b-2a8d-4faf-be0d-83fe30fc1df7" />
-<img width="678" height="369" alt="image" src="https://github.com/user-attachments/assets/bd885202-ff9c-4e11-8566-8639afb5ecb6" />
+<img width="675" height="427" alt="image" src="https://github.com/user-attachments/assets/ad83f392-d53e-42e9-a721-6614492d2686" />
+
