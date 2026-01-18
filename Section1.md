@@ -103,3 +103,34 @@
 - Performance
 - Technical specifications
   - Cores, Memory, Power
+
+# 11. Volta+Ampere+Pascal+SIMD
+## Volta
+- 21 billion transistors
+- SM Architecture Optimized for Deep Learning
+  - 50% more energy efficient than the previous generation
+  - 매년 단순히, 코어 수를 늘리거나 메모리 사이즈를 키우는 것 뿐만 아니라 유닛의 성능도 끌어올림
+  - Tensor Core 도입
+  - independent parallel integer, floating-point data path
+  - new combined L1 data cache and shared memory
+- HBM2 Memory
+  - 16GB
+  - 900GB/s peak memory bandwidth
+- Volta Optimized Software
+- Extreme performance for AI and HPC
+  - 125 Tensor TFLOPS of Mixed Precision
+- GV100 GPU Hardware Architecture in-depth
+  - 84 SMs
+    - 64 FP32 cores
+    - 64 INT32 cores
+    - 8 Tensor ores
+  - Eight 512-bit memory controllers (4096 bits total)
+  - SM partition
+    - L0 I-Cache
+    - Warp Scheduler (SIMT)
+    - Dispatcher unit
+    - Registers
+    - Computational units
+
+<img width="675" height="942" alt="image" src="https://github.com/user-attachments/assets/fc0e191b-2a8d-4faf-be0d-83fe30fc1df7" />
+<img width="678" height="369" alt="image" src="https://github.com/user-attachments/assets/bd885202-ff9c-4e11-8566-8639afb5ecb6" />
