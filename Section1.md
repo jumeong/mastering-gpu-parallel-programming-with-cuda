@@ -135,3 +135,9 @@
 <img width="675" height="942" alt="image" src="https://github.com/user-attachments/assets/fc0e191b-2a8d-4faf-be0d-83fe30fc1df7" />
 <img width="675" height="427" alt="image" src="https://github.com/user-attachments/assets/ad83f392-d53e-42e9-a721-6614492d2686" />
 
+- NVLink second generation
+  - more links, more faster
+    - Pascal 때는 gpu끼리 오로지 한 개의 connection만. Volta에서는 두 개까지 가능
+    - bandwidth 향상 (160GB/s → 300GB/s)
+- DGX-1
+  - NVIDIA는 GPU 뿐만 아니라, CPU, DDR Memor, Power 등까지 붙여서 하나의 시스템으로 구성한 제품을 팔기도 함
