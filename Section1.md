@@ -94,7 +94,12 @@
 
 # 11. Before reading any whitepapers
 - New features
-- SM 구조 변화 (e.g., Volta vs Ampere)
+- SM 구조 변화
+  - Volta vs Ampere Tensor core 수
+    - Tensor core가 처음으로 탑재된 Volta에서는 SM 내에서 8개였다가 Ampere 이후로 4개로 유지
+  - INT32/FP32 통합 ALU
+    - 스케줄링 단순화 가능
+    - 다이 면적 효율
 - Performance
 - Technical specifications
   - Cores, Memory, Power
