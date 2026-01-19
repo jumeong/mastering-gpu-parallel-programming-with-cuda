@@ -124,7 +124,7 @@
     - 64 FP32 cores
     - 64 INT32 cores
     - 8 Tensor cores
-    - 125 TFLOPS = 640 Tensor cores x 1530 MHz x 128 (64FMA)
+    - 125 Peak FP16 Tensor TFLOPS = 640 Tensor cores x 1530 MHz x 128 (64FMA)
   - Eight 512-bit memory controllers (4096 bits total)
   - SM partition
     - L0 I-Cache
