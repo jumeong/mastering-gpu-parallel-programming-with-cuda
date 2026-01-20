@@ -20,6 +20,10 @@
 - A100 기준 SM 수는 108개이고 Max Thread Blocks/SM은 32이므로 칩 전체에서 실행 가능한 Block 수는 32*108개
 
 # 20. Compiling Cuda on Linux
+- nvcc --version
+- nvcc -o <output-file> <kernel.cu>
+- cudaDeviceSynchronize()
+  - Host에서 Device의 동작이 모두 끝나기를 대기
 
 # 21. 002: Hello World program (Warp_IDs)
 
