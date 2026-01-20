@@ -4,16 +4,11 @@
 # 18. Mapping SW from CUDA to HW + introducing CUDA
 - Host: CPU & DRAM
 - Device: GPU & GDRAM
-- Hardware Hierarchy
-  - GPU
-  - SM
-  - Partition
-  - Core
 
 | Hardware      | Software            |
 | --------      | --------            |
 | **GPU**       | **GPU application** | 
-| **SM**        | **Block**           |
+| **SMSP**      | **Block**           |
 | **Partition** | **Warp**            |
 | **CUDA Core** | **Thread**          |
 
