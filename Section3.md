@@ -8,8 +8,8 @@
 | Hardware      | Software            |
 | --------      | --------            |
 | **GPU**       | **GPU application** | 
-| **SMSP**      | **Block**           |
-| **Partition** | **Warp**            |
+| **SM**        | **Block**           |
+| **SMSP**      | **Warp**            |
 | **CUDA Core** | **Thread**          |
 
 # 19. 001: Hello World program (threads - Blocks)
