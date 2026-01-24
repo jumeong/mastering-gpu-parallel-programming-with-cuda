@@ -21,7 +21,7 @@
 
 # 20. Compiling Cuda on Linux
 - nvcc --version
-- nvcc -o <output-file> <kernel.cu>
+- nvcc -arch=sm_75 -o <output-file> <kernel.cu>
 - cudaDeviceSynchronize()
   - Host에서 Device의 동작이 모두 끝나기를 대기
 
