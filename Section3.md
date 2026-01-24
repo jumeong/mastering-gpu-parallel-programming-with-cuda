@@ -28,6 +28,13 @@
 # 21. 002: Hello World program (Warp_IDs)
 
 # 22. 003: Vector addition + the Steps for any CUDA project
+1. Allocate memory for vectors A, B, and C on the host and GPU
+2. Initialize vectors A and B with values.
+3. Copy the host vectors to the device.
+4. Define the CUDA kernel vectorAdd, which adds the vectors element-wise
+5. Launch the kernel with a suitable number of blocks and threads.
+6. Copy the result back to the host vector C.
+7. Free the allocated memory on both the host and device.
 
 # 23. 004: Vector addition + blocks and thread indexing + GPU performance
 
