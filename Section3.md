@@ -7,7 +7,7 @@
 
 | Hardware      | Software            |
 | --------      | --------            |
-| **GPU**       | **GPU application** | 
+| **GPU**       | **Grid**            |
 | **SM**        | **Block**           |
 | **SMSP**      | **Warp**            |
 | **CUDA Core** | **Thread**          |
@@ -37,5 +37,7 @@
 7. Free the allocated memory on both the host and device.
 
 # 23. 004: Vector addition + blocks and thread indexing + GPU performance
+- 이전 Chapter와 비교해서 Block을 2개로 늘림
+- Software에서 Block은 Hardware에서 SM에 mapping되므로 2개의 SM을 utilize하는 것
 
 # 24. 005: levels of parallelization - Vector addition with Extra-large vectors
