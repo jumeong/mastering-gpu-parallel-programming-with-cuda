@@ -72,3 +72,13 @@
                                 SUPPORTED_GPU_TARGET_TEMP, VOLTAGE, FBC_STATS
                                 ROW_REMAPPER, RESET_STATUS, GSP_FIRMWARE_VERSION
     - curernt clock, supported clock과 같이 특정 부분을 집어서 출력 가능
+   
+# 27. The GPU's Occupancy and Latency hiding
+## cudaDeviceGetAttribute()
+- 각종 Attribute를 지정해서 Fetch할 수 있음
+- e.g., cudaDeviceGetAttribute(&maxThreadsPerMP, cudaDevAttrMaxThreadsPerMultiProcessor, device)
+  
+## Occupancy
+- Occupancy is a measure of the utilization of the resources in a GPU
+- Theoretical occupancy: the ideal case (warp used in a kernel / max warps per SM)
+- Achived occupancy: the actual usage of the GPU's resources
