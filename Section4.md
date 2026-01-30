@@ -33,6 +33,5 @@
   - Setting Power Limits
     - command: nvidia-smi -i 0 -pl 150
     - 입력한 값으로 Power를 제한
-    - /content# nvidia-smi -i 0 -pl 150
-      Provided power limit 150.00 W is not a valid power limit which should be between 60.00 W and 70.00 W for GPU 00000000:00:04.0
-      Terminating early due to previous errors.
+    - <img width="1055" height="56" alt="image" src="https://github.com/user-attachments/assets/fab90f15-1cbb-4223-b76b-714cdb8e680d" />
+
