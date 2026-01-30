@@ -13,7 +13,29 @@
 
 # 26. Nvidia-smi and its configurations (Linux User)
 ## nvidia-smi (NVIDIA System Management Interface)
-<img width="752" height="348" alt="image" src="https://github.com/user-attachments/assets/c08d9f80-f472-4cdb-b097-117d997f6fee" />
+```bash
+/content# nvidia-smi
+Fri Jan 30 15:32:55 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.54.15              Driver Version: 550.54.15      CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  Tesla T4                       Off |   00000000:00:04.0 Off |                    0 |
+| N/A   38C    P8              9W /   70W |       0MiB /  15360MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+```
 
 - Performance monitoring
   - Utilization, memory usage, temperature and power
@@ -36,7 +58,11 @@
   - Setting Power Limits
     - command: nvidia-smi -i 0 -pl 150
     - 입력한 값으로 Power를 제한
-    - <img width="1055" height="56" alt="image" src="https://github.com/user-attachments/assets/fab90f15-1cbb-4223-b76b-714cdb8e680d" />
+    - ```bash
+      /content# nvidia-smi -i 0 -pl 150
+      Provided power limit 150.00 W is not a valid power limit which should be between 60.00 W and 70.00 W for GPU 00000000:00:04.0
+      Terminating early due to previous errors.
+      ```
   - Persistence mode
     - 강사의 설명이 Permission mode로 Clock이나 Power를 조절할 때, 이것에 따라 좌우될 수 있다고 하는데 틀린 설명인듯...
     - Gemini의 설명
