@@ -81,4 +81,22 @@
 ## Occupancy
 - Occupancy is a measure of the utilization of the resources in a GPU
 - Theoretical occupancy: the ideal case (warp used in a kernel / max warps per SM)
+  - 강의에서는 max warps per SM이 48
+  - kernel의 Block Size를 32에서 64로 변경하면서 Theroetical occupancy가 두배가 되는 것을 보여줌
+  - 이 계산을 할때, SM, Registers, Shared Mem, Warps 등 Block 수를 제한하는 여러 요소에 의해 계산된 것 중 최소로 계산해야 함.
+  - ```bash
+    Section: Occupancy
+    ------------------------------- ----------- ------------
+    Metric Name                     Metric Unit Metric Value
+    ------------------------------- ----------- ------------
+    Block Limit SM                        block           16
+    Block Limit Registers                 block            8
+    Block Limit Shared Mem                block           16
+    Block Limit Warps                     block            2
+    Theoretical Active Warps per SM        warp           32
+    Theoretical Occupancy                     %          100
+    Achieved Occupancy                        %        82.32
+    Achieved Active Warps Per SM           warp        26.34
+    ------------------------------- ----------- ------------
+    ```
 - Achived occupancy: the actual usage of the GPU's resources
