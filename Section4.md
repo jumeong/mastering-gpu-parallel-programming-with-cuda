@@ -21,7 +21,10 @@
   - Controlling the clock speed and power limits
 - Device information querying
   - GPU name, driver version
-- nvidia-smi에서의 CUDA Version과 nvcc에서의 CUDA Version이 다른 이유
+- nvidia-smi에서의 CUDA Version과 nvcc에서의 CUDA Version는 다를 수 있음!!!
+  - 강사의 환경에서는 두 버전이 같았고, 의미하는 바가 다른 것을 언급하지 않음. 
+  - nvidia-smi = “이 GPU 드라이버로 어디까지 실행 가능?”
+  - nvcc = “나는 지금 어떤 CUDA로 컴파일 중?”
 
 - Various Options
   - Monitoring GPUs Continuously
@@ -61,3 +64,11 @@
         모드 비활성화 (Disable): nvidia-smi -pm 0
         
         참고: 최근 최신 드라이버나 데이터센터용 GPU(A100, H100 등)에서는 이 기능이 Persistence Daemon으로 대체되거나 기본적으로 활성화되어 있는 경우가 많습니다. 개인용 PC(RTX 시리즈)보다는 서버 환경에서 훨씬 중요하게 다뤄지는 옵션이에요.
+  - -d 옵션
+    - -d,   --display=          Display only selected information: MEMORY,
+                                UTILIZATION, ECC, TEMPERATURE, POWER, CLOCK,
+                                COMPUTE, PIDS, PERFORMANCE, SUPPORTED_CLOCKS,
+                                PAGE_RETIREMENT, ACCOUNTING, ENCODER_STATS,
+                                SUPPORTED_GPU_TARGET_TEMP, VOLTAGE, FBC_STATS
+                                ROW_REMAPPER, RESET_STATUS, GSP_FIRMWARE_VERSION
+    - curernt clock, supported clock과 같이 특정 부분을 집어서 출력 가능
