@@ -14,6 +14,7 @@
 # 26. Nvidia-smi and its configurations (Linux User)
 ## nvidia-smi (NVIDIA System Management Interface)
 <img width="752" height="348" alt="image" src="https://github.com/user-attachments/assets/c08d9f80-f472-4cdb-b097-117d997f6fee" />
+
 - Performance monitoring
   - Utilization, memory usage, temperature and power
 - Settings management
