@@ -34,4 +34,28 @@
     - command: nvidia-smi -i 0 -pl 150
     - 입력한 값으로 Power를 제한
     - <img width="1055" height="56" alt="image" src="https://github.com/user-attachments/assets/fab90f15-1cbb-4223-b76b-714cdb8e680d" />
-
+  - Persistence mode
+    - 강사의 설명이 Permission mode로 Clock이나 Power를 조절할 때, 이것에 따라 좌우될 수 있다고 하는데 틀린 설명인듯...
+    - Gemini의 설명
+      - **Persistence Mode가 필요한 이유**
+        보통 리눅스 환경에서 GPU를 사용하지 않을 때는 전력 소모를 줄이기 위해 드라이버가 언로드(Unload)되거나 GPU가 휴면 상태로 들어갑니다. 그런데 다시 작업을 시작하려고 하면 드라이버를 다시 불러오는 과정에서 **수 초 정도의 지연(Latency)**이 발생하게 되죠.
+        
+        pm 옵션은 이 과정을 생략하고 GPU를 항상 대기 상태로 유지하게 만듭니다.
+        
+        **주요 특징 및 장점**
+        응답 속도 향상: 드라이버 로딩 오버헤드가 없어져서 커맨드 실행이나 작업 시작이 즉각적입니다.
+        
+        상태 유지: GPU의 설정값들이 작업 사이사이에 초기화되지 않도록 도와줍니다.
+        
+        안정성: 빈번하게 드라이버가 로드/언로드되면서 생길 수 있는 미세한 오류를 방지합니다.
+ 
+        **사용 방법**
+        터미널에서 다음과 같은 명령어로 설정하거나 확인할 수 있습니다.
+        
+        현재 상태 확인: nvidia-smi -q | grep "Persistence Mode"
+        
+        모드 활성화 (Enable): nvidia-smi -pm 1
+        
+        모드 비활성화 (Disable): nvidia-smi -pm 0
+        
+        참고: 최근 최신 드라이버나 데이터센터용 GPU(A100, H100 등)에서는 이 기능이 Persistence Daemon으로 대체되거나 기본적으로 활성화되어 있는 경우가 많습니다. 개인용 PC(RTX 시리즈)보다는 서버 환경에서 훨씬 중요하게 다뤄지는 옵션이에요.
