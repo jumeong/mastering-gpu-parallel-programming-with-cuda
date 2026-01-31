@@ -128,7 +128,13 @@ Fri Jan 30 15:32:55 2026
     ```
 - Achived occupancy: the actual usage of the GPU's resources
   - scenario 1: no memory or dependency
-  <img width="415" height="591" alt="image" src="https://github.com/user-attachments/assets/20f9d52e-65a9-44db-bfd2-65160fa7fd44" />
+  ```bash
+  # for 4 warps
+  FMUL
+  FMUL
+  ISETP
+  IMAD
+  ```
 
   | Cycle | FP32 Units (32 Cores 가정) | 상태 및 비고 |
   | :--- | :--- | :--- |
@@ -171,6 +177,13 @@ Fri Jan 30 15:32:55 2026
   | **16** | **Warp 3: FMUL2** (2/2) | Warp 3의 두 번째 명령어 완료 |
     
   - scenario 2: memory request, 1 inst. dependency
+    ```bash
+    # for 4 warps
+    FMUL
+    ISETP
+    LDG.E.SYS
+    IMAD (dependent w/ LDG)
+    ```
 - Summary
   - High occupancy doesn't always equate to high perforamnce
   - Identifying and understanding occupancy can help us pinpoint performance issues.
