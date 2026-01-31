@@ -235,3 +235,19 @@ Fri Jan 30 15:32:55 2026
 
 ## Shared Memory/SM
 - A100 기준 up to 164KB
+
+# 29. Starting with the nsight compute
+
+# 30. All profiling tools from NVidia (Nsight systems - compute - nvprof ...)
+- CUDA-MEMCHECK
+  - Identify and diagnose memory errors in CUDA applications
+- CUDA-GDB
+- NVIDIA Visual Profiler (nvvp)
+  - Detailed timing info and hw counters for CUDA, OpenCL, Direct3D...
+  - Graphical view of the applications timelines and achieved occupancy
+- NVIDIA Nsight Systems
+  - Comprehensive workload level performance
+- NVIDIA Nsight Compute
+  - Dive into top CUDA kernels by using metrics/counter collection
+- NVIDIA Nsight Graphics
+  - Detailed frame/render performance
