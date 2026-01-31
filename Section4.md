@@ -128,7 +128,8 @@ Fri Jan 30 15:32:55 2026
     ```
 - Achived occupancy: the actual usage of the GPU's resources
   - scenario 1: no memory or dependency
-    
+  <img width="415" height="591" alt="image" src="https://github.com/user-attachments/assets/20f9d52e-65a9-44db-bfd2-65160fa7fd44" />
+
   | Cycle | FP32 Units (32 Cores 가정) | 상태 및 비고 |
   | :--- | :--- | :--- |
   | **1** | **Warp 0: FMUL1** | Warp 0의 첫 번째 FMUL (32스레드 동시 처리) |
