@@ -107,6 +107,7 @@ Fri Jan 30 15:32:55 2026
 ## Occupancy
 - Occupancy is a measure of the utilization of the resources in a GPU
 - Theoretical occupancy: the ideal case (warp used in a kernel / max warps per SM)
+  - Optimal conditions where there are enough independent tasks.
   - 강의에서는 max warps per SM이 48
   - kernel의 Block Size를 32에서 64로 변경하면서 Theroetical occupancy가 두배가 되는 것을 보여줌
   - 이 계산을 할때, SM, Registers, Shared Mem, Warps 등 Block 수를 제한하는 여러 요소에 의해 계산된 것 중 최소로 계산해야 함.
@@ -126,3 +127,14 @@ Fri Jan 30 15:32:55 2026
     ------------------------------- ----------- ------------
     ```
 - Achived occupancy: the actual usage of the GPU's resources
+  - scenario 1: no memory or dependency
+  - scenario 2: memory request, 1 inst. dependency
+- Summary
+  - High occupancy doesn't always equate to high perforamnce
+  - Identifying and understanding occupancy can help us pinpoint performance issues.
+  - Low occupancy, on the other hand, suggests that there's a bottleneck preventing the GPU from being fully utilized.
+ 
+## Out of Order
+- CPU에서는 dependency를 조사해서 기다릴 필요가 없는 Instruction이 뒤쪽에 있으면 순서를 바꿔서 실행해버리기도 함
+- DSP에서는 보통 scratch pad memory를 두기 때문에 연산기 뿐만 아니라 Load/Store 명령어까지 Cycle이 Static함. 그래서, OoO보다는 Compile 단계에서 VLIW로 여러 개의 명령어를 묶어버려서 Latency Hiding을 함.
+- GPU는 dependency 때문에 stall되는 warp가 생기면 다른 warp로 context switching해버린다는 철학
