@@ -136,7 +136,7 @@ Fri Jan 30 15:32:55 2026
   IMAD
   ```
 
-  | Cycle | FP32 Units (32 Cores 가정) | 상태 및 비고 |
+  | Cycle | FP32 Units (32 Cores 가정) | 비고 |
   | :--- | :--- | :--- |
   | **1** | **Warp 0: FMUL1** | Warp 0의 첫 번째 FMUL (32스레드 동시 처리) |
   | **2** | **Warp 1: FMUL1** | Warp 1의 첫 번째 FMUL |
@@ -157,7 +157,7 @@ Fri Jan 30 15:32:55 2026
 
   -------------------------
   
-  | Cycle | FP32 Units (16 Cores) | 상태 및 비고 |
+  | Cycle | FP32 Units (16 Cores) | 비고 |
   | :--- | :--- | :--- |
   | **1** | **Warp 0: FMUL1** (1/2) | Warp 0의 앞쪽 16개 스레드 처리 |
   | **2** | **Warp 0: FMUL1** (2/2) | Warp 0의 뒤쪽 16개 스레드 처리 (Warp 0 완료) |
@@ -177,19 +177,39 @@ Fri Jan 30 15:32:55 2026
   | **16** | **Warp 3: FMUL2** (2/2) | Warp 3의 두 번째 명령어 완료 |
     
   - scenario 2: memory request, 1 inst. dependency
-    ```bash
-    # for 4 warps
-    FMUL
-    ISETP
-    LDG.E.SYS
-    IMAD (dependent w/ LDG)
-    ```
+  ```bash
+  # for 4 warps
+  FMUL
+  ISETP
+  LDG.E.SYS
+  IMAD (dependent w/ LDG)
+  ```
+
+  | Cycle | FP32 Units (32 Cores 가정) | 비고 |
+  | :--- | :--- | :--- |
+  | **1** | **Warp 0: FMUL** | Warp 0 시작 |
+  | **2** | **Warp 1: FMUL** | Warp 1 시작 |
+  | **3** | **Warp 2: FMUL** | Warp 2 시작 |
+  | **4** | **Warp 3: FMUL** | Warp 3 시작 |
+  | **5** | **Warp 0: ISETP** | Warp 0 비교 연산 |
+  | **6** | **Warp 1: ISETP** | Warp 1 비교 연산 |
+  | **7** | **Warp 2: ISETP** | Warp 2 비교 연산 |
+  | **8** | **Warp 3: ISETP** | Warp 3 비교 연산 |
+  | **9** | **Warp 0: LDG** | Warp 0 메모리 요청 (Stall 시작) |
+  | **10** | **Warp 1: LDG** | Warp 1 메모리 요청 |
+  | **11** | **Warp 2: LDG** | Warp 2 메모리 요청 |
+  | **12** | **Warp 3: LDG** | Warp 3 메모리 요청 |
+  | **13** | (Memory Waiting) | Warp 0 데이터 아직 안 옴 (Stall) |
+  | **14** | (Memory Waiting) | Warp 1 데이터 아직 안 옴 |
+  | **15** | **Warp 0: IMAD** | **Warp 0 데이터 도착!** (IMAD 실행) |
+  | **16** | **Warp 1: IMAD** | **Warp 1 데이터 도착!** (IMAD 실행) |
+
 - Summary
   - High occupancy doesn't always equate to high perforamnce
   - Identifying and understanding occupancy can help us pinpoint performance issues.
   - Low occupancy, on the other hand, suggests that there's a bottleneck preventing the GPU from being fully utilized.
  
-## Out of Order
-- CPU에서는 dependency를 조사해서 기다릴 필요가 없는 Instruction이 뒤쪽에 있으면 순서를 바꿔서 실행해버리기도 함
+## Latency Hiding
+- CPU에서는 dependency를 조사해서 기다릴 필요가 없는 Instruction이 뒤쪽에 있으면 순서를 바꿔서 실행해버리기도 함 (Out of Order)
 - DSP에서는 보통 scratch pad memory를 두기 때문에 연산기 뿐만 아니라 Load/Store 명령어까지 Cycle이 Static함. 그래서, OoO보다는 Compile 단계에서 VLIW로 여러 개의 명령어를 묶어버려서 Latency Hiding을 함.
 - GPU는 dependency 때문에 stall되는 warp가 생기면 다른 warp로 context switching해버린다는 철학
