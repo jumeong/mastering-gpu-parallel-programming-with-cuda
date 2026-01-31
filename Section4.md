@@ -213,3 +213,25 @@ Fri Jan 30 15:32:55 2026
 - CPU에서는 dependency를 조사해서 기다릴 필요가 없는 Instruction이 뒤쪽에 있으면 순서를 바꿔서 실행해버리기도 함 (Out of Order)
 - DSP에서는 보통 scratch pad memory를 두기 때문에 연산기 뿐만 아니라 Load/Store 명령어까지 Cycle이 Static함. 그래서, OoO보다는 Compile 단계에서 VLIW로 여러 개의 명령어를 묶어버려서 Latency Hiding을 함.
 - GPU는 dependency 때문에 stall되는 warp가 생기면 다른 warp로 context switching해버린다는 철학
+
+# 28. Allocated active blocks per SM
+- 동시에 실행가능한 block 수
+- 여러가지 HW 자원에 의해 계산되는 block 수 중 minimum
+
+## Max Thread blocks/SM
+- A100 기준 32개
+  
+## Max warps/SM
+- A100 기준 64개
+- Thread Block의 Size에 따라 몇개의 Block이 SM에 할당될지는 달라질 수 있음
+- 예를 들어, 한 개 Block이 128 Threads (4 Warps)로 구성된다면 이 SM에는 16개 Block만 할당 가능
+- 한 개 Block이 64 Threads (2 Warps)로 구성된다면 32개 Block으로 구성 가능
+
+## Max registers/SM
+- A100 기준 64K 개
+- 1024 Threads로 구성된 1 Block을 가정, Each thread requires 100 registers.
+- thread 수를 줄이지 않으면 register spilling 발생!
+- register spilling이 발생하면 register가 모자라므로 local memory까지 끌어쓰게 됨. local memory는 register에 비해 latency가 느리므로 performance degradation
+
+## Shared Memory/SM
+- A100 기준 up to 164KB
