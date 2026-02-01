@@ -251,3 +251,12 @@ Fri Jan 30 15:32:55 2026
   - Dive into top CUDA kernels by using metrics/counter collection
 - NVIDIA Nsight Graphics
   - Detailed frame/render performance
+
+# 31. Error Checking APIs
+- Checking erros to ensure Cuda functions operate smoothly.
+- Example
+  - Application compiles correctly, but fails to execute properly
+  - Malfunctioning malloc because no enough space in the memory
+- Two catergories
+  - Synchronous
+  - Asynchronous 
