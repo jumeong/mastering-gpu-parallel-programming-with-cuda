@@ -262,8 +262,63 @@ Fri Jan 30 15:32:55 2026
   - Asynchronous 
 - Usage
   ```cpp
-  err = cudaMalloc((void **)&d_A, size);
+  cudaError_t err = cudaMalloc((void **)&d_A, size);
   if (err != cudaSuccess) {
       fprintf(stderr, "Failed to allocated device memory %s\n", cudaGetErrorString(err));
   }
+
+  cudaError_t err = cudaGetLastError();
+  if (err != cudaSuccess) {
+      fprintf(stderr, "Kernel launch failed %s\n", cudaGetErrorString(err));
+  }
   ```
+
+# 32. Nsight Compute performance using command line analysis
+## 두 가지 분석 방법
+
+| 방법 | 특징 | 사용 시기 |
+| --- | --- | --- |
+| **CLI (Command Line)** | 특정 메트릭만 빠르게 수집 | 몇 가지 수치만 확인할 때 |
+| **GUI (Graphical)** | Roofline 분석, 차트, 상세 시각화 | 심층 성능 분석할 때 |
+
+**기본 명령어**
+```basah
+ncu ./my_cuda_app                    # 기본 4개 섹션 출력
+ncu -o profile ./my_cuda_app         # 결과를 파일로 저장
+```
+
+## Sections (섹션)
+
+기본 실행 시 4개 섹션만 표시되지만, **총 23개 섹션**이 존재함
+
+### 기본 4개 섹션
+| 섹션 | 내용 |
+| --- | --- |
+| **GPU Speed of Light** | DRAM, L1/L2 캐시 throughput, SM utilization |
+| **Launch Statistics** | block size, grid size, registers/thread, shared memory |
+| **Occupancy** | theoretical vs achieved occupancy |
+| **Memory Workload** | DRAM, L1, L2의 active cycles |
+
+### 특정 섹션만 보기
+```bash
+# Launch Statistics만 보기
+ncu --section LaunchStats ./my_cuda_app
+
+# Warp State Statistics 보기
+ncu --section WarpStateStats ./my_cuda_app
+```
+
+### 주요 섹션 목록
+| Identifier | 설명 |
+| --- | --- |
+| `SpeedOfLight` | GPU 전체 throughput |
+| `LaunchStats` | 커널 런치 정보 |
+| `Occupancy` | Warp occupancy |
+| `MemoryWorkloadAnalysis` | 메모리 워크로드 상세 |
+| `WarpStateStats` | Warp 상태 통계 |
+| `SchedulerStats` | 스케줄러 통계 |
+| `SourceCounters` | 소스 레벨 카운터 |
+| `NVLink` | NVLink 통신 분석 |
+
+
+# 33. Graphical Nsight Compute (windows and linux)
