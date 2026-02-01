@@ -228,7 +228,7 @@ Fri Jan 30 15:32:55 2026
 - 한 개 Block이 64 Threads (2 Warps)로 구성된다면 32개 Block으로 구성 가능
 
 ## Max registers/SM
-- A100 기준 64K 개
+- A100 기준 64K개
 - 1024 Threads로 구성된 1 Block을 가정, Each thread requires 100 registers.
 - thread 수를 줄이지 않으면 register spilling 발생!
 - register spilling이 발생하면 register가 모자라므로 local memory까지 끌어쓰게 됨. local memory는 register에 비해 latency가 느리므로 performance degradation
