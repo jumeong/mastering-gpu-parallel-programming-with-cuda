@@ -260,3 +260,10 @@ Fri Jan 30 15:32:55 2026
 - Two catergories
   - Synchronous
   - Asynchronous 
+- Usage
+  ```cpp
+  err = cudaMalloc((void **)&d_A, size);
+  if (err != cudaSuccess) {
+      fprintf(stderr, "Failed to allocated device memory %s\n", cudaGetErrorString(err));
+  }
+  ```
