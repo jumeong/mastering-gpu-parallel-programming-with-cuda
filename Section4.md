@@ -321,4 +321,247 @@ ncu --section WarpStateStats ./my_cuda_app
 | `NVLink` | NVLink 통신 분석 |
 
 
+## Metrics (메트릭)
+
+> 💡 Nsight Compute에는 약 10만 개의 메트릭이 있음
+> 참고 : https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#metric-collection
+
+### 메트릭 전체 목록 보기
+
+```bash
+ncu --query-metrics-mode all > metrics.txt
+```
+
+### 메트릭 명명 규칙
+
+```jsx
+[하드웨어 유닛]__[메트릭명].[suffix]
+```
+
+**예시**: `dram__bytes.avg`
+
+- `dram` = 하드웨어 유닛 (DRAM)
+- `bytes` = 메트릭 (바이트 수)
+- `avg` = suffix (평균값)
+
+### 하드웨어 유닛
+
+| 접두어 | 하드웨어 |
+| --- | --- |
+| `dram` | DRAM (글로벌 메모리) |
+| `l1tex` | L1 텍스처 캐시 |
+| `lts` | L2 캐시 |
+| `sm` | Streaming Multiprocessor |
+| `smsp` | SM 내 파티션 (SM의 1/4) |
+| `gpu` | GPU 전체 |
+
+### Suffix (접미사)
+
+| Suffix | 의미 |
+| --- | --- |
+| `.min` | 모든 SM 중 최소값 |
+| `.max` | 모든 SM 중 최대값 |
+| `.avg` | 모든 SM의 평균값 |
+| `.sum` | 전체 GPU 합계 (= max × SM 개수) |
+
+**예시**
+
+- 100개 SM이 있고 L2 캐시 사용 사이클이 SM마다 다를 때:
+    - `.min` = 가장 적게 사용한 SM의 값
+    - `.max` = 가장 많이 사용한 SM의 값
+    - `.avg` = 전체 평균
+    - `.sum` = 전체 합계
+ 
+## 실전 사용법
+
+### 특정 메트릭 수집
+
+```bash
+# L1 캐시 hit rate
+ncu --metrics l1tex__t_sector_hit_rate ./my_app
+
+# 여러 메트릭 동시 수집 (쉼표로 구분)
+ncu --metrics l1tex__t_sector_hit_rate,lts__t_sector_hit_rate ./my_app
+
+# suffix 생략하면 모든 suffix 수집
+ncu --metrics sm__inst_executed ./my_app
+# → sm__inst_executed.avg, .max, .min, .sum 모두 출력
+
+```
+
+### CSV로 내보내기
+
+```bash
+ncu --metrics sm__inst_executed --csv ./my_app > output.csv
+
+```
+
+### 특정 하드웨어 유닛의 모든 메트릭 수집
+
+```bash
+# shared memory 관련 모든 메트릭
+ncu --metrics regex:.*shared.* ./my_app --csv > shared_metrics.csv
+
+# L1 캐시 관련 모든 메트릭
+ncu --metrics regex:.*l1tex.* ./my_app
+```
+
+---
+
+## 핵심 메트릭 예시
+
+### 캐시 성능
+
+```bash
+# L1 hit rate (0%면 문제!)
+ncu --metrics l1tex__t_sector_hit_rate ./my_app
+
+# L2 hit rate
+ncu --metrics lts__t_sector_hit_rate ./my_app
+
+```
+
+> ⚠️ L1 hit rate가 0%면 모든 메모리 연산이 글로벌 메모리에서 읽는 것
+> → 수백 사이클 vs L1 히트 시 ~30 사이클
+
+### 명령어 실행
+
+```bash
+# SM당 실행된 명령어 수
+ncu --metrics sm__inst_executed ./my_app
+
+# FP64 (double precision) 명령어
+ncu --metrics sm__inst_executed_pipe_fp64 ./my_app
+
+# FP16 (half precision) 명령어
+ncu --metrics sm__inst_executed_pipe_fp16 ./my_app
+```
+
+### Warp 상태
+
+```bash
+ncu --section WarpStateStats ./my_app
+```
+
+- `warp_cycles_per_issued_instruction` - 명령어당 warp 사이클
+- `active threads per warp` - warp당 활성 스레드 (이상적: 32)
+
+## 분석 팁
+
+### .sum 계산 방식
+
+```jsx
+.sum = .max × SM 개수
+
+```
+
+**검증 예시** (RTX 3060, 38 SM):
+
+```jsx
+sm__inst_executed.sum / sm__inst_executed.avg ≈ 38
+
+```
+
+### Nsight Compute가 주는 조언
+
+실행 결과에 자동으로 분석/경고가 포함됨:
+
+```jsx
+The local speedup is 93%, which is good.
+On average each warp stalled for 111 cycles due to scoreboard dependency.
+
+```
+
+→ 이런 메시지를 읽고 병목 파악
+
+---
+
+## Quick Reference
+
+| 명령어 | 용도 |
+| --- | --- |
+| `ncu ./app` | 기본 4개 섹션 분석 |
+| `ncu --section <name> ./app` | 특정 섹션만 |
+| `ncu --metrics <metric> ./app` | 특정 메트릭 수집 |
+| `ncu --metrics regex:.*<pattern>.* ./app` | 패턴 매칭 메트릭 |
+| `ncu --csv ./app > out.csv` | CSV 출력 |
+| `ncu --query-metrics-mode all` | 전체 메트릭 목록 |
+| `ncu -o profile ./app` | 결과 파일 저장 (GUI에서 열기) |
+
+---
+
+## 핵심 포인트
+
+**섹션 vs 메트릭**
+- 섹션: 관련 메트릭들의 그룹 (예: Launch Statistics)
+- 메트릭: 개별 측정값 (예: block size, register count)
+
+**10만 개 메트릭?**
+
+- 실제로 다 볼 필요 없음
+- 명명 규칙만 알면 1분에 100개 메트릭 파악 가능
+- 하드웨어 유닛 + 메트릭명 + suffix 구조
+
+**실전에서 자주 보는 것**
+
+- L1/L2 hit rate → 캐시 효율
+- SM utilization → GPU 활용도
+- Occupancy → Warp 스케줄링 효율
+- inst_executed → 실제 실행된 명령어
+
+### 데모 시나리오
+
+- `ncu ./vector_add` 실행해서 기본 4개 섹션 보여주기
+- L1 hit rate 0% 나오는 거 보여주기 → "이건 문제다"
+- `-csv`로 Excel에서 열어보기
+
+### 다음 강의 예고
+
+- block/thread 수 변경이 실행 시간에 미치는 영향 분석
+- GUI 분석 상세 설명
+
+## 실습 예제
+
+CLI 분석 연습용 예제:
+
+### 01_vector_add_[basic.cu](http://basic.cu/)
+
+기본 Memory Bound 커널. CLI 사용법 익히기에 적합.
+
+```bash
+# 기본 4개 섹션 확인
+ncu ./01_basic
+
+# 특정 섹션만
+ncu --section LaunchStats ./01_basic
+ncu --section SpeedOfLight ./01_basic
+
+# 특정 메트릭
+ncu --metrics l1tex__t_sector_hit_rate,lts__t_sector_hit_rate ./01_basic
+
+# CSV 출력
+ncu --metrics dram__bytes.sum --csv ./01_basic > bandwidth.csv
+
+# GUI용 파일 저장
+ncu -o 01_basic_profile ./01_basic
+
+```
+
+### 05_error_[cases.cu](http://cases.cu/)
+
+의도적으로 에러를 발생시키는 6가지 케이스. ncu가 에러를 어떻게 보고하는지 확인:
+
+```bash
+# 각 케이스별로 실행
+./05_error 1  # Invalid grid size
+./05_error 2  # Invalid block size
+./05_error 3  # Too many threads
+./05_error 4  # Out of memory
+./05_error 5  # Invalid device
+./05_error 6  # Kernel timeout
+
+# ncu로 프로파일링 시도 (에러 메시지 확인)
+ncu ./05_error 3
+```
+
 # 33. Graphical Nsight Compute (windows and linux)
