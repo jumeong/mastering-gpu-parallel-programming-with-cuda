@@ -565,3 +565,167 @@ ncu ./05_error 3
 ```
 
 # 33. Graphical Nsight Compute (windows and linux)
+# Nsight Compute GUI 분석
+
+NVIDIA Nsight Compute 그래픽 인터페이스를 사용한 심층 성능 분석
+
+---
+
+## CLI vs GUI
+
+| 방법 | 장점 | 단점 |
+| --- | --- | --- |
+| **CLI** | 빠른 메트릭 수집, 스크립트 자동화 | 시각화 없음 |
+| **GUI** | 그래프/차트, 의존성 시각화, 조언 제공 | 설정 필요 |
+
+> 💡 둘 다 같은 메트릭을 수집하지만, GUI는 시각화와 자동 분석/조언이 핵심 차별점
+> 
+
+---
+
+## 설치 및 실행
+
+**설치**
+
+- CUDA Toolkit 설치 시 자동 포함
+- 별도 설치: NVIDIA 웹사이트에서 "Nsight Compute" 다운로드
+
+**프로파일링 시작**
+
+```bash
+# 1. 실행파일 컴파일
+nvcc -o my_app.exe my_kernel.cu
+
+# 2. 프로세스를 일시정지 상태로 시작
+ncu --mode launch ./my_app.exe
+
+# 3. GUI에서 Attach → 프로세스 선택 → Profile Kernel
+
+```
+
+**GUI 워크플로우**
+
+1. File → New Project
+2. Application Executable 경로 설정
+3. Working Directory 설정
+4. 프로세스 Attach
+5. Metrics Selection에서 분석할 섹션 선택
+6. Profile Kernel 클릭
+
+## Metrics Selection
+
+프로파일링 전에 수집할 섹션 선택:
+
+| 섹션 | 내용 |
+| --- | --- |
+| **Speed of Light Throughput** | SM/메모리 throughput |
+| **Roofline Chart** | Compute vs Memory bound 시각화 |
+| **Compute Workload Analysis** | 연산 유닛별 활용도 |
+| **Memory Workload Analysis** | 메모리 계층 간 데이터 흐름 |
+| **Scheduler Statistics** | Warp 스케줄링 통계 |
+| **Warp State Statistics** | Warp stall 원인 분석 |
+| **Instruction Statistics** | 명령어별 실행 횟수 |
+| **Occupancy** | Warp occupancy 분석 |
+
+---
+
+## 핵심 분석 화면
+
+### 1. Summary 탭
+
+기본 정보 요약:
+
+- Achieved Occupancy (예: 81%)
+- Theoretical Occupancy (예: 100%)
+- 주요 병목 요약
+
+### 2. Details 탭 (가장 중요)
+
+View → **Expand Sections**로 그래프 활성화
+
+---
+
+## GPU Speed of Light
+
+**Compute vs Memory Bound 판단**
+
+```jsx
+Compute Throughput: 16%  ← 낮음
+Memory Throughput:  95%  ← 높음
+
+```
+
+→ **Memory Bound** 애플리케이션
+
+**해석**
+
+- Memory 95%: 대부분의 시간을 메모리 연산에 사용
+- Compute 16%: ALU를 거의 활용하지 못함
+- 목표: Memory throughput ↓, Compute throughput ↑
+
+---
+
+## Memory Workload Analysis
+
+메모리 계층 간 데이터 흐름 시각화:
+
+```jsx
+[SM] → 3.15M requests → [L1 Cache] → [L2 Cache] → [DRAM]
+                         Hit: 0%      Hit: 33%
+이거 실제그림으로 바꾸면 좋을듯...
+```
+
+**차트 색상 의미**
+
+- 🟢 밝은색: 높은 활용도 (peak에 가까움)
+- 🔴 어두운색: 낮은 활용도
+
+**데이터 전송량**
+
+- L2 → L1: 268MB (읽기: vector A, B)
+- L1 → L2: 134MB (쓰기: vector C)
+- 읽기가 쓰기의 2배 = 2개 읽고 1개 씀
+
+**문제 진단**
+
+- L1 hit rate 0% → 모든 요청이 L2 이상으로 감
+- L2 hit rate 33% → 2/3가 DRAM까지 감
+- Memory bandwidth 95% → DRAM 접근 과다
+
+## Compute Workload Analysis
+
+연산 유닛별 활용도:
+
+| 유닛 | Active Cycles % | Peak Instructions % |
+| --- | --- | --- |
+| **Load/Store** | - | 16% ← 가장 높음 |
+| **FMA** (Fused Multiply-Add) | 3.55% | - |
+| **ALU** (Int, FP32, FP16 등) | 4% | - |
+| **FP64** | 0% | - |
+| **Tensor** | 0% | - |
+
+→ Load/Store가 지배적 = **Memory Bound 확인**
+
+---
+
+## Warp State Statistics
+
+**Stall 원인 분석**
+
+```jsx
+Warp Cycles per Issued Instruction: 119 cycles
+Stall Long Scoreboard: 111 cycles (93%)
+
+```
+
+**해석**
+
+- 매 명령어 발행마다 warp가 평균 119 사이클 대기
+- 111 사이클은 **scoreboard dependency** 때문
+- Scoreboard dependency = 이전 메모리 로드 결과를 기다림
+
+**Nsight Compute 조언 예시**
+
+> "On average each warp stalled for 111 cycles waiting for scoreboard dependency on L1 texture cache"
+
+→ 메모리 지연이 stall의 주원인
