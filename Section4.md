@@ -729,3 +729,137 @@ Stall Long Scoreboard: 111 cycles (93%)
 > "On average each warp stalled for 111 cycles waiting for scoreboard dependency on L1 texture cache"
 
 → 메모리 지연이 stall의 주원인
+
+## Source 탭: 어셈블리 분석
+
+CUDA 코드와 SASS (어셈블리) 매핑:
+
+```c
+// CUDA 코드
+int i = blockIdx.x * blockDim.x + threadIdx.x;
+if (i < n) {
+    C[i] = A[i] + B[i];
+}
+
+```
+
+```jsx
+// SASS 어셈블리
+S2R R0, SR_TID.X      // threadIdx.x 읽기
+S2R R1, SR_CTAID.X    // blockIdx.x 읽기
+IMAD R6, R1, R2, R0   // i = blockIdx.x * blockDim.x + threadIdx.x
+LDG R4, [R8]          // A[i] 로드
+LDG R3, [R10]         // B[i] 로드
+FADD R9, R4, R3       // A[i] + B[i]  ← 93% stall 원인!
+STG [R12], R9         // C[i] 저장
+
+```
+
+**의존성 시각화**
+
+- `FADD R9, R4, R3`는 R4(A[i])와 R3(B[i])에 의존
+- R4는 `LDG R4` 완료를 기다려야 함
+- R3는 `LDG R3` 완료를 기다려야 함
+- → **Load가 끝날 때까지 Add 불가능**
+
+**GUI에서 확인**
+
+- ⚠️ 아이콘: stall 원인 명령어
+- 삼각형 화살표: 의존성 방향 표시
+- 마우스 오버: "This line is responsible for 84% of all warp stalls"
+
+## Occupancy 분석
+
+**현재 상태**
+
+- Theoretical: 100%
+- Achieved: 81%
+
+**Occupancy Calculator 그래프**
+
+Registers per Thread:
+
+```jsx
+현재: 16 registers → 48% occupancy
+40 registers까지 증가해도 occupancy 유지
+40+ registers → occupancy 감소 시작
+
+```
+
+Block Size:
+
+```jsx
+현재: 96 threads/block
+128까지 증가 → 영향 없음
+224+ → occupancy 감소 시작
+800+ → 심각한 감소 (48% → 24%)
+```
+
+Shared Memory:
+
+```jsx
+현재: 0 bytes (shared memory 미사용)
+증가 시 → occupancy 감소
+```
+
+---
+
+## API Statistics 탭
+
+CUDA Runtime API별 소요 시간:
+
+| API | 시간 | 설명 |
+| --- | --- | --- |
+| `cudaMemcpy` | 40ms | CPU↔GPU 데이터 전송 |
+| `cudaMalloc` | 7ms | GPU 메모리 할당 |
+| `cudaFree` | - | GPU 메모리 해제 |
+| `cudaLaunchKernel` | - | 커널 실행 |
+
+→ 커널 실행 시간 외에 **데이터 전송 오버헤드** 파악 가능
+
+## 실습 예제
+
+각 분석 개념을 실습할 수 있는 예제 코드:
+
+| 예제 | 학습 목표 | 관련 섹션 |
+| --- | --- | --- |
+| `01_vector_add_basic.cu` | Memory Bound 커널 분석 | GPU Speed of Light, Memory Workload |
+| `02_compute_bound.cu` | Compute Bound 커널 분석 (FMA 집약) | Compute Workload Analysis |
+| `03_shared_memory.cu` | Global vs Shared Memory 캐시 효율 비교 | Memory Workload, L1/L2 Hit Rate |
+| `04_occupancy_test.cu` | Block Size, Register 수가 Occupancy에 미치는 영향 | Occupancy Calculator |
+| `06_warp_stall.cu` | Scoreboard, Branch Divergence, Barrier Stall 원인 분석 | Warp State Statistics, Source 탭 |
+| `07_memory_coalescing.cu` | Coalesced vs Strided Access 패턴 비교 | Memory Workload, DRAM Throughput |
+
+### 실습 순서 권장
+
+```bash
+# 1. Memory Bound 기본 (GUI 익숙해지기)
+ncu -o 01_basic ./01_basic
+# → Speed of Light에서 Memory > Compute 확인
+
+# 2. Compute Bound 비교
+ncu -o 02_compute ./02_compute
+# → Speed of Light에서 Compute > Memory 확인
+
+# 3. Shared Memory 효과
+ncu -o 03_shared ./03_shared
+# → L1 Hit Rate 비교 (global vs shared)
+
+# 4. Occupancy 실험
+ncu --section Occupancy ./04_occupancy 64   # block size 64
+ncu --section Occupancy ./04_occupancy 256  # block size 256
+ncu --section Occupancy ./04_occupancy 1024 # block size 1024
+# → Occupancy Calculator 그래프와 비교
+
+# 5. Warp Stall 분석
+ncu --section WarpStateStats -o 06_stall ./06_warp_stall
+# → Source 탭에서 stall 원인 명령어 확인
+
+# 6. Memory Coalescing
+ncu -o 07_coalesced ./07_coalescing coalesced
+ncu -o 07_strided ./07_coalescing strided
+# → DRAM Throughput 비교
+
+```
+
+---
