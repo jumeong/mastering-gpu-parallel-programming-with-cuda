@@ -136,7 +136,7 @@ Fri Jan 30 15:32:55 2026
   IMAD
   ```
 
-  | Cycle | FP32 Units (32 Cores 가정) | 비고 |
+  | Cycle | FP32 Units 32 Cores | 비고 |
   | :--- | :--- | :--- |
   | **1** | **Warp 0: FMUL1** | Warp 0의 첫 번째 FMUL (32스레드 동시 처리) |
   | **2** | **Warp 1: FMUL1** | Warp 1의 첫 번째 FMUL |
@@ -154,27 +154,6 @@ Fri Jan 30 15:32:55 2026
   | **14** | **Warp 1: IMAD** | Warp 1의 정수 곱셈-가산 |
   | **15** | **Warp 2: IMAD** | Warp 2의 정수 곱셈-가산 |
   | **16** | **Warp 3: IMAD** | Warp 3의 정수 곱셈-가산 |
-
-  -------------------------
-  
-  | Cycle | FP32 Units (16 Cores) | 비고 |
-  | :--- | :--- | :--- |
-  | **1** | **Warp 0: FMUL1** (1/2) | Warp 0의 앞쪽 16개 스레드 처리 |
-  | **2** | **Warp 0: FMUL1** (2/2) | Warp 0의 뒤쪽 16개 스레드 처리 (Warp 0 완료) |
-  | **3** | **Warp 1: FMUL1** (1/2) | Warp 1의 앞쪽 16개 스레드 처리 시작 |
-  | **4** | **Warp 1: FMUL1** (2/2) | Warp 1의 뒤쪽 16개 스레드 처리 완료 |
-  | **5** | **Warp 2: FMUL1** (1/2) | Warp 2 처리 시작 |
-  | **6** | **Warp 2: FMUL1** (2/2) | Warp 2 처리 완료 |
-  | **7** | **Warp 3: FMUL1** (1/2) | Warp 3 처리 시작 |
-  | **8** | **Warp 3: FMUL1** (2/2) | Warp 3 처리 완료 |
-  | **9** | **Warp 0: FMUL2** (1/2) | Warp 0의 두 번째 명령어 시작 |
-  | **10** | **Warp 0: FMUL2** (2/2) | Warp 0의 두 번째 명령어 완료 |
-  | **11** | **Warp 1: FMUL2** (1/2) | Warp 1의 두 번째 명령어 시작 |
-  | **12** | **Warp 1: FMUL2** (2/2) | Warp 1의 두 번째 명령어 완료 |
-  | **13** | **Warp 2: FMUL2** (1/2) | Warp 2의 두 번째 명령어 시작 |
-  | **14** | **Warp 2: FMUL2** (2/2) | Warp 2의 두 번째 명령어 완료 |
-  | **15** | **Warp 3: FMUL2** (1/2) | Warp 3의 두 번째 명령어 시작 |
-  | **16** | **Warp 3: FMUL2** (2/2) | Warp 3의 두 번째 명령어 완료 |
     
   - scenario 2: memory request, 1 inst. dependency
   ```bash
@@ -185,7 +164,7 @@ Fri Jan 30 15:32:55 2026
   IMAD (dependent w/ LDG)
   ```
 
-  | Cycle | FP32 Units (32 Cores 가정) | 비고 |
+  | Cycle | FP32 Units 32 Cores | 비고 |
   | :--- | :--- | :--- |
   | **1** | **Warp 0: FMUL** | Warp 0 시작 |
   | **2** | **Warp 1: FMUL** | Warp 1 시작 |
