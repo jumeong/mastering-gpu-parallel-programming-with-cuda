@@ -192,7 +192,7 @@ Fri Jan 30 15:32:55 2026
  
 ## Latency Hiding
 - CPU에서는 dependency를 조사해서 기다릴 필요가 없는 Instruction이 뒤쪽에 있으면 순서를 바꿔서 실행해버리기도 함 (Out of Order)
-- DSP에서는 보통 scratch pad memory를 두기 때문에 연산기 뿐만 아니라 Load/Store 명령어까지 Cycle이 Static함. 그래서, OoO보다는 Compile 단계에서 VLIW로 여러 개의 명령어를 묶어버려서 Latency Hiding을 함.
+- DSP에서는 보통 scratch pad memory (TCM)를 두기 때문에 연산기 뿐만 아니라 Load/Store 명령어까지 Cycle이 Static함. 그래서, OoO보다는 Compile 단계에서 VLIW로 여러 개의 명령어를 묶어버려서 Latency Hiding을 함.
 - GPU는 dependency 때문에 stall되는 warp가 생기면 다른 warp로 context switching해버린다는 철학
 
 # 28. Allocated active blocks per SM
