@@ -15,4 +15,6 @@
   - Once the LSU receives the request, it coalesces the data from the 32 threads.
   - If each thread needs 1 float element, the total for the warp is 128 bytes.
   - In this case, the LSU can request the whole cache line from L1.
-- L2 Cache Write는 무조건 Hit라고 collect되나 봄.
+
+# L2 Cache Write 개념이 신기해서 찾아본 내용
+- GPU L2는 write도 캐시한다. 그래서 이미 L2에 있는 cache line에 write하면 DRAM 안 가고 L2에서 처리되는데, 그게 write hit다.
