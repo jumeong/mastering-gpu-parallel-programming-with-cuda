@@ -15,3 +15,4 @@
   - Once the LSU receives the request, it coalesces the data from the 32 threads.
   - If each thread needs 1 float element, the total for the warp is 128 bytes.
   - In this case, the LSU can request the whole cache line from L1.
+- L2 Cache Write는 무조건 Hit라고 collect되나 봄.
