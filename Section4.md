@@ -106,7 +106,7 @@ Fri Jan 30 15:32:55 2026
   
 ## Occupancy
 - Occupancy is a measure of the utilization of the resources in a GPU
-- Theoretical occupancy: the ideal case (warp used in a kernel / max warps per SM)
+- Theoretical occupancy: the ideal case (active warps per SM / maximum warps per SM)
   - Optimal conditions where there are enough independent tasks.
   - 강의에서는 max warps per SM이 48
   - kernel의 Block Size를 32에서 64로 변경하면서 Theroetical occupancy가 두배가 되는 것을 보여줌
